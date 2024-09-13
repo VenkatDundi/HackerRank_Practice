@@ -1,0 +1,46 @@
+Problem - 
+
+Occupations(Name, Occupation)
+
+Query an alphabetically ordered list of all names in OCCUPATIONS, immediately followed by the first letter of each profession as a parenthetical (i.e.: enclosed in parentheses). For example: AnActorName(A), ADoctorName(D), AProfessorName(P), and ASingerName(S).
+
+Query the number of ocurrences of each occupation in OCCUPATIONS. Sort the occurrences in ascending order, and output them in the following format:
+There are a total of [occupation_count] [occupation]s.
+where [occupation_count] is the number of occurrences of an occupation in OCCUPATIONS and [occupation] is the lowercase occupation name. If more than one Occupation has the same [occupation_count], they should be ordered alphabetically.
+
+
+Sample Output
+
+Ashely(P)
+Christeen(P)
+Jane(A)
+Jenny(D)
+Julia(A)
+Ketty(P)
+Maria(A)
+Meera(S)
+Priya(S)
+Samantha(D)
+There are a total of 2 doctors.
+There are a total of 2 singers.
+There are a total of 3 actors.
+There are a total of 3 professors.
+
+
+Description:
+
+1. Used Substring to capture the first letter of the occupation
+2. Used Concat to make the required string
+3. Order by to specify the ascending order
+4. Grouped by Occupation to retrive the count for each occupation.
+5. CAST has been used to convert the type from int to varchar so that it can be concatenated with string.
+
+
+Query:
+
+select Concat(Name, "(", SUBSTRING(Occupation, 1, 1), ")") from OCCUPATIONS order by Name, SUBSTRING(Occupation, 1, 1);
+
+
+select 'There are a total of '+CAST(count(*) as VARCHAR) as counter, LOWER(Occupation)+'s.' from OCCUPATIONS group by Occupation order by counter, Occupation;
+
+

@@ -1,0 +1,39 @@
+Problem:
+
+
+Pivot the Occupation column in OCCUPATIONS so that each Name is sorted alphabetically and displayed underneath its corresponding Occupation. The output column headers should be Doctor, Professor, Singer, and Actor, respectively.
+
+Note: Print NULL when there are no more names corresponding to an occupation.
+
+
+
+
+Doctor --- Professor --- Singer --- Actor
+
+Sample Output
+
+Jenny    Ashley     Meera  Jane
+Samantha Christeen  Priya  Julia
+NULL     Ketty      NULL   Maria
+
+
+
+Query Explanation:
+
+1. PIVOT to be applied on occupation to format [D][P][S][A] as fields.
+2. Only aggregate functions can be used within PIVOT.
+3. We didn't have any numerical values in table to apply aggregate functions.
+4. Come up with ROW_NUMBER() which would add a numerical value to table. (For uniquely distinguishing each record with numeric value)
+5. When there exists a unqiue id for each record, PIVOT doesn't help us in any way. (Returns all the rows as in the initial table)
+6. Use Partition by occupation to calculate ROW_NUMBER() as each name can be numbered within each occupation category.
+7. Used min(name) in PIVOT to return the name within each occupation category.
+
+
+Query:
+
+/*select name, occupation, ROW_NUMBER() over (partition by occupation order by name) from OCCUPATIONS*/
+
+select Doctor,Professor,Singer,Actor from (select name, occupation, ROW_NUMBER() over (partition by occupation order by name) as row_num from OCCUPATIONS) O
+PIVOT (min(name) FOR occupation IN ([Doctor], [Professor], [Singer], [Actor])) as pvt;
+
+

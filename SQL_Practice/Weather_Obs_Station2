@@ -1,0 +1,38 @@
+From Given, 
+
+The table station consists of required fields LAT_N and LONG_W.
+
+Requirement: sum of latitude and longitudes rounded to scale of 2
+
+
+I could see that the data type of these fields is different as the sum and round functions returned unusual values with extended floating decimals. 
+
+I tried to identify the actual data type of each columnas below:
+
+
+
+SELECT
+
+    COLUMN_NAME,
+
+    DATA_TYPE
+
+FROM
+
+    INFORMATION_SCHEMA.COLUMNS
+
+WHERE
+
+    TABLE_NAME = 'STATION';
+
+I could see that the 2 fields are NUMERIC type fields. I have used CAST to convert the type to decimal type with a scale of 2. Moreover, converted those values to varchar and concatenated them.
+
+
+
+
+
+Query:
+----------------------------------
+
+select CAST(CAST(sum(LAT_N) as Decimal(10, 2)) as varchar) + ' ' + CAST(CAST(sum(LONG_W) as Decimal(10, 2)) as varchar) from STATION;
+

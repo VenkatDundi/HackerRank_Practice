@@ -1,0 +1,23 @@
+Problem:
+
+We define an employee's total earnings to be their monthly  worked, and the maximum total earnings to be the maximum total earnings for any employee in the Employee table. 
+Write a query to find the maximum total earnings for all employees as well as the total number of employees who have maximum total earnings. Then print these values as  space-separated integers.
+
+
+Query Explanation:
+
+1. Calculated column Earnings - months * salary
+2. Use window function rank() to find the highest earnings of employees
+3. Count the unique employees with highest earnings using filter on rank=1
+4. Use the result set from cte
+
+
+Query:
+
+
+with res_cte as (
+select *,months*salary as 'earnings' from Employee),
+cte2 as (
+select earnings, count(employee_id) as 'ct', rank() over(order by earnings desc) as 'r' from res_cte group by earnings)
+
+select earnings, ct from cte2 where r=1;
