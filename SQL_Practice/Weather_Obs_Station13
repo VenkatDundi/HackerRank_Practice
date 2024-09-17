@@ -1,0 +1,23 @@
+1. Query the sum of Northern Latitudes (LAT_N) from STATION having values greater than 38.7880  and less than 137.2345. Truncate your answer to 4 decimal places.
+
+Requirement: Sum of latitude values from the table station between given range of values.
+
+As earlier, used CAST to convert the data type of value to decimal with scale of 4.
+
+
+Query:
+----------------------------
+
+select CAST(sum(LAT_N) as Decimal(10,4)) from station where LAT_N > 38.7880 and LAT_N < 137.2345;
+
+
+
+2. Query the Western Longitude (LONG_W) for the largest Northern Latitude (LAT_N) in STATION that is less than 137.2345
+
+
+Here, we consider the LONG_W corresponding to the largest LAT_N as per given constarint. A subquery has been used to match the condition for largest LAT_N.
+
+Query:
+----------------------------
+
+select CAST(LONG_W as decimal(10, 4)) from STATION where LAT_N = (select max(LAT_N) from station where LAT_N < 137.2345);

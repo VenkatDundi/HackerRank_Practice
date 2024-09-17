@@ -1,0 +1,14 @@
+Given, the list of North Latitudes (LAT_N). Calculate the median of it.
+
+We could see that the median is a separating entity of the given list of values sorted in ascending or descending order.
+
+
+
+Here, the row_number() window functionm has been considered to number the values as per the descending order. The min and max row numbers are calculated and the mean of it is considered as the row number of the median as it will be the separating entityt for higher half and the lower half of LAT_N.
+
+Query:
+--------------------------
+with cte_rn as(
+select LAT_N, row_number() over(order by LAT_N desc) as 'rn' from STATION)
+select CAST(LAT_N as decimal(10,4)) from cte_rn where rn = (select (min(rn) + max(rn))/2 from cte_rn);
+

@@ -1,0 +1,53 @@
+Given P1(a,b) and P2(c,d) where a = min(LAT_N), b = min(LONG_W), c = max(LAT_N), d = max(LONG_W)
+
+We need to calculate Manhattan Distance and round it to 4 decimals.
+
+
+
+Declared 4 variables for each of given constarints and another one for the result.
+
+As Manhattan Distance specifies: Sum of absolute differences between the coordinates. Example, ABS(a-c)+ABS(b-d)
+
+We can either use the absolute function or write condition to specify the difference and calculatye the distance.
+
+
+Query:
+----------------------------
+declare @a float;
+declare @b float;
+declare @c float;
+declare @d float;
+declare @s float;
+
+select @a = min(LAT_N) from STATION;
+select @b = min(LONG_W) from STATION;
+select @c = max(LAT_N) from STATION;
+select @d = max(LONG_W) from STATION;
+
+IF @a>@c
+    BEGIN
+        IF @b>@d
+            SET @s = (@a-@c)+(@b-@d);
+        ELSE
+            SET @s = (@a-@c)+(@d-@b);
+    END
+ELSE
+    BEGIN
+        IF @b>@d
+            SET @s = (@c-@a)+(@b-@d);
+        ELSE
+            SET @s = (@c-@a)+(@d-@b);
+    END
+select CAST(@s as Decimal(10, 4))
+
+
+
+
+Q2. Calculate the Euclidean Distance
+
+Similarly, use the below formula
+
+Query:
+---------------------------
+SET @e = SQRT(POWER(ABS(@a-@c), 2) + POWER(ABS(@b-@d), 2))
+select CAST(@e as Decimal(10, 4))
