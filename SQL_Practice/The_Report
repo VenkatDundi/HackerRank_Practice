@@ -1,0 +1,19 @@
+Given 2 tables - Students(Id, Name, Marks) & Grades (Grade, Min_mark, max_mark)
+
+Requirements: Need to generate a report with details of Name, Grade, Marks. It should only contain names of students whose grade is not less than 8, in descending order of grades and then alphabrtical order of names if there exists a tie. Students with grade less than 8 should be specified in the report with "NULL", in the acending order of marks.
+
+
+Explanation:
+------------
+
+* A CTE to capture the required fields like ID, Name, Marks, Grade - Joining two tables on comparison of marks within given min and max range and assign corresponding grade.
+* Applying filter conditions on the result of the CTE to get final result set of the report.
+
+
+Query:
+------
+
+with cte_a as(Select ID, Name, Marks, Grade from Students INNER JOIN Grades on marks >= min_mark and marks <= max_mark)
+select CASE when grade >=8 then Name
+            else "NULL"
+        end as Name, grade, marks from cte_a order by grade desc, name ASC, marks ASC;

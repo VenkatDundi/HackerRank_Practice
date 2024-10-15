@@ -1,0 +1,23 @@
+Given, 5 tables representing a hierarchy: Company, lead_manager, senior_manager, manager, employee
+
+company --- lead_manager :  company_code (Matching field)
+lead_manager --- senior_manager : lead_manager_code (Matching field)
+senior_manager --- manager : senior_manager_code (Matching field)
+manager --- employee : manager_code (Matching field)
+
+Now, we need details about company, founder and corresponding count of associates in this hierarchy (leads, senior, managers, employees)
+
+
+* Joining all tables together using respective matching fields generates resultset with duplicates. We can discard them by using distinct count.
+* We group by company code and the founder of the company and display in the ascending order.
+
+
+Query:
+-------------------------
+
+select c.company_code, c.founder, count(distinct l.lead_manager_code), count(distinct s.senior_manager_code), count(distinct m.manager_code), count(distinct e.employee_code) from company c, Lead_Manager l, Senior_Manager s, Manager m, Employee e where
+c.company_code = l.company_code and l.lead_manager_code = s.lead_manager_code and s.senior_manager_code = m.senior_manager_code and m.manager_code = e.manager_code group by c.company_code, c.founder order by c.company_code;
+
+
+/* Draft Query 
+select top 16 c.company_code, c.founder, l.lead_manager_code, s.senior_manager_code from company c, lead_manager l, Senior_Manager s where c.company_code = l.company_code and l.lead_manager_code = s.lead_manager_code order by c.company_code */

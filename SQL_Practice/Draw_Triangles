@@ -1,0 +1,38 @@
+Given, triangle pattern to print on the screen using the sql script.
+
+What did I learn:
+
+* For loop in unavailable in sql scripts, and so need to use WHILE block to achieve similar functionality.
+* replicate() is a function which helps in repeating the string using a parameter, number of repetitions.
+* Declare required variables, use conditionals and decrement the required variables.
+
+Script:
+----------------------
+declare @n int;
+declare @i int;
+
+SET @n = 20;
+SET @i = @n;
+
+while @i>0
+    Begin
+        print replicate('* ', @i)
+        SET @i = @i - 1;
+    End
+
+
+Similarly, consider another pattern of triangle.
+
+Script:
+----------------------
+declare @n int;
+declare @i int;
+
+SET @n = 20;
+SET @i = 1;
+
+WHILE @i<@n+1
+    BEGIN
+        print replicate('* ', @i)
+        SET @i = @i + 1
+    END
