@@ -1,0 +1,25 @@
+Given, Hackers(hacker_id, name) Difficulty(difficulty_level, score) Challenges(challenge_id, hacker_id, difficulty_level) Submissions(submission_id, hacker_id, challenge_id, score)
+
+We need to identify hacker id and name who have scored maximum score in more than one challenge. 
+Need to order the result set based on descending order of number of challenges with maximum score and then ascending order of hacker_id.
+
+Explanation:
+------------
+1. Initially, I felt it was confusing whether to join specific tables and proceed further. Going through the sample Input and Output helps in understanding it in a better way.
+2. Any number of hackers can compete in challenge and have scores recorded. Firstly, we can join Submissions & Challenges and thus identify the diffidulty levels of all the participants for that challenge.
+3. Now, identify the maximum score of all those challenges using the Difficulty Table (Join using difficulty_level).
+4. Filter the resultset such that the hacker score from submissions is equal to maximum score for that challenge. Then, use group by to count the number of challenges with such maximum score for each hacker.
+5. Join the Hacker table and retrieve names of hackers and specify the order by clauses.
+
+Query:
+------
+
+with cte_new as(
+select s.hacker_id, count(s.challenge_id) as 'ctr' from Submissions s inner join Challenges c 
+on s.challenge_id = c.challenge_id inner join Difficulty d 
+on c.difficulty_level = d.difficulty_level 
+where s.score = d.score group by (s.hacker_id) 
+having count(s.challenge_id)>1)
+
+select cte_new.hacker_id, h.name from Hackers h inner join cte_new 
+on cte_new.hacker_id = h.hacker_id order by ctr desc, h.hacker_id asc;

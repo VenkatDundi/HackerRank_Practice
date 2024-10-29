@@ -1,0 +1,20 @@
+Given, Students(ID, Name), Friends(Id, Friend_Id), Packages(Id, Salary)
+
+We need to identify the names of the students whose friends salaries are higher than them. Need to order the results based on the friends salary offer.
+
+
+Explanation:
+------------
+
+1. Joining the tables students, friends helps in retrieving the student and corresponding friend details.
+2. Joining Packages to these tables helps us in identifying the salary of the students (Joining based on student id)
+3. If we compare the salary of student to their friends salary, we can identify names of students. Also, the result set can be ordered based on the friends salary.
+4. Here, I have used the cross join and applied filters. Need to observe other possibilities.
+
+Query:
+------
+with cte as(select id, salary from packages)
+select s.name from students s, friends f, packages p where s.id = f.id and s.id=p.id and 
+p.salary < (select salary from cte where cte.id=f.friend_id) 
+order by (select salary from cte where cte.id=f.friend_id);
+
