@@ -1,0 +1,19 @@
+Given, Wands(id, code, coins_needed, power) and Wands_Property(code, age, is_evil)
+
+The best way to choose is by determining the minimum number of gold galleons needed to buy each non-evil wand of high power and age. Write a query to print the id, age, coins_needed, and power of the wands that Ron's interested in, sorted in order of descending power. If more than one wand has same power, sort the result in order of descending age.
+
+Explanation:
+------------
+* By going though the sample input and output provided, they are chosing the wands with maximum age and power.
+* Used partition by to identify wands with max age ang power - ordered by power desc, and coins ascending so that we get the wands with less coins.
+* Filtered resultse with is_evil=0
+* Performed INNER JOIN to get wand's code
+
+
+Query:
+------
+with cte2 as(select w.id, wp.age, w.coins_needed, w.power, row_number() over(partition by wp.age,w.power order by w.power desc, w.coins_needed asc) as 'rn' from 
+wands w inner join wands_property wp 
+on w.code = wp.code 
+where wp.is_evil=0)
+select cte2.id, cte2.age,cte2.coins_needed, cte2.power from cte2 where rn=1 order by cte2.power desc, cte2.age desc;

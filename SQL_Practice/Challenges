@@ -1,0 +1,33 @@
+Given, Hackers(hacker_id, name) and Challenges(challenge_id, hacker_id)
+
+Write a query to print the hacker_id, name, and the total number of challenges created by each student. Sort your results by the total number of challenges in descending order. If more than one student created the same number of challenges, then sort the result by hacker_id. If more than one student created the same number of challenges and the count is less than the maximum number of challenges created, then exclude those students from the result.
+
+Explanation:
+------------
+* When there exists multiple hackers who have created same number of challenges but less than the maximum number of challenges, they can be excluded from the resultset.
+* But, when there are multiple hackers who have created same number of challenges which is equal to maximum number of challenges, they are a part of resultset.
+
+consider, for each hacker, extract the count(challenges) and calculate max(count(challenges)) partition by count(challenges)
+
+* Extract row number to assign a number based on number of challenges created. Then, calculate maximum row number - This helps in identifying the Initial conditions (Same number of challenges created but less than maximum to be discarded).
+
+* Use { where cte4.mrn=1 or cte4.ctr = cte4.max } - As per given conditions, 
+
+Either the challenges created should have only one occurence (max row number = 1) (or)
+The Number of challenges created should be equal to maximum number of challenges.
+
+
+Query:
+-------
+with cte3 as
+(select h.hacker_id, count(c.challenge_id) as 'ctr', max(count(c.challenge_id)) over (order by count(c.challenge_id) desc) as 'max', row_number() over(partition by count(c.challenge_id) order by count(c.challenge_id) desc) as 'rn'
+from Hackers h inner join Challenges c on h.hacker_id = c.hacker_id group by h.hacker_id),
+
+cte4 as(
+select cte3.hacker_id, cte3.ctr, cte3.max, cte3.rn, max(cte3.rn) over (partition by cte3.ctr order by cte3.ctr) as 'mrn' from cte3)
+
+select cte4.hacker_id, h.name, cte4.ctr from
+cte4 inner join Hackers h
+on cte4.hacker_id = h.hacker_id
+where cte4.mrn=1 or cte4.ctr = cte4.max
+order by cte4.ctr desc, cte4.hacker_id

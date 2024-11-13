@@ -1,0 +1,22 @@
+From Given, Hackers(hacker_id, name) and Submissions (submission_id, hacker_id, challenge_id, score)
+
+The total score of a hacker is the sum of their maximum scores for all of the challenges. 
+Write a query to print the hacker_id, name, and total score of the hackers ordered by the descending score. 
+If more than one hacker achieved the same total score, then sort the result by ascending hacker_id. Exclude all hackers with a total score of  from your result.
+
+Explanation:
+------------
+* To calculate the total score of each hacker - Firstly, Identify the maximum scores of hacker from all the challenges.
+* Used partition by to get the maximum score from all possible challenges for a hacker. Extracted the distinct records from resultset
+* Through CTE, these scores are aggregated to sum and grouped by hacker_id, and name upon performing INNER JOIN
+* Filtered records with total score > 0 and ordered respectively
+
+Query:
+------
+with cte as(
+select distinct s.hacker_id, s.challenge_id, max(s.score) over(partition by s.hacker_id, s.challenge_id order by s.score desc) as 'mscore' from Submissions s)
+select cte.hacker_id, h.name, sum(cte.mscore) as 'Total Score' from cte inner join hackers h 
+on cte.hacker_id = h.hacker_id 
+group by cte.hacker_id,h.name 
+having sum(cte.mscore)>0 
+order by sum(cte.mscore) desc, cte.hacker_id;
